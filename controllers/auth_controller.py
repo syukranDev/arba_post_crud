@@ -11,7 +11,7 @@ def login():
 
     if User.verify_user(username, password):
         token = generate_token(username)
-        return jsonify({'token': token}), 200
+        return jsonify({'token': token, 'user_id' : username}), 200
     return jsonify({'message': 'Invalid username or password'}), 401
 
 def register():
