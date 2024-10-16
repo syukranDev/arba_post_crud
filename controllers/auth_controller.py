@@ -31,11 +31,17 @@ def register():
     return jsonify({'message': 'User registration failed'}), 500
 
 def protected():
-    token = request.headers.get('Authorization')
-    if not token:
+    auth_header  = request.headers.get('Authorization')
+    if not auth_header:
         return jsonify({'message': 'Token is missing'}), 401
 
+    if not auth_header.startswith("Bearer "):
+        return jsonify({'message': 'Invalid token format - Should be sent as Bearer Token'}), 401
+
+    token = auth_header.split(" ")[1]
+
     decoded = decode_token(token)
+    print(decoded)
     if decoded == "expired":
         return jsonify({'message': 'Token has expired'}), 401
     elif decoded == "invalid":
