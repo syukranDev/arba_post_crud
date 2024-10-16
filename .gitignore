@@ -1,0 +1,10 @@
+.env
+.env_local
+
+__pycache__/
+migrations/
+.log
+my_notes
+.vscode/
+vscode/
+myenv
