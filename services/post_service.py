@@ -1,6 +1,7 @@
 from models.post_model import Post
 from models.comment_model import Comment
 from app import db
+from flask import jsonify
 
 def create_post(user_id, title, content):
     post = Post(user_id=user_id, title=title, content=content)
@@ -24,9 +25,15 @@ def delete_post(post_id, user_id):
     return post
 
 def create_comment(user_id, post_id, content):
+    post = Post.query.get(post_id)
+    if not post:
+        # return jsonify({ 'errMsg' : "Post ID is not present in the posts table."}), 422
+        return {"errMsg": "Post ID is not present in the posts table."}, 422
+
     comment = Comment(user_id=user_id, post_id=post_id, content=content)
     db.session.add(comment)
     db.session.commit()
+
     return comment
 
 def update_comment(comment_id, user_id, content):

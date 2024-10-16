@@ -52,10 +52,14 @@ def create_comment_endpoint(post_id, decoded):
     user_id = decoded['username']
 
     if not content:
-        return jsonify({'errMsg': 'content is empty'}), 422
+        return jsonify({'errMsg': 'Content is empty'}), 422
 
-    comment = create_comment(user_id, post_id, content)
-    return jsonify(comment.to_dict()), 201
+    comment_response = create_comment(user_id, post_id, content)
+
+    if isinstance(comment_response, tuple):
+        return jsonify(comment_response[0]), comment_response[1]  
+
+    return jsonify(comment_response.to_dict()), 201  
 
 def update_comment_endpoint(comment_id, decoded):
     data = request.get_json()
@@ -68,12 +72,7 @@ def update_comment_endpoint(comment_id, decoded):
     comment = update_comment(comment_id, user_id, content)
     return jsonify(comment.to_dict()) if comment else jsonify({'status':'failed', 'message': 'Comment ID not exist'}), 404
 
-def delete_comment_endpoint(comment_id):
-    token = request.headers.get('Authorization')
-    decoded = decode_token(token)
-    if decoded in ["expired", "invalid"]:
-        return jsonify({'message': 'Unauthorized'}), 401
-
+def delete_comment_endpoint(comment_id, decoded):
     user_id = decoded['username']
     comment = delete_comment(comment_id, user_id)
     return jsonify({'message': 'Comment deleted'}) if comment else jsonify({'status':'failed', 'message': 'Comment ID not exists'}), 404

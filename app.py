@@ -66,17 +66,20 @@ def create_app():
         return post_controller.delete_post_endpoint(post_id, decoded_token)
 
     # Comment Routes
-    # @app.route('/posts/<int:post_id>/comments', methods=['POST'])
-    # def create_comment(post_id):
-    #     return post_controller.create_comment_endpoint(post_id)
+    @app.route('/posts/<int:post_id>/comments/create', methods=['POST'])
+    @token_required
+    def create_comment(post_id, decoded_token): # we need post id so the comment creted will associated to the post id
+        return post_controller.create_comment_endpoint(post_id, decoded_token)
 
-    # @app.route('/comments/<int:comment_id>', methods=['PUT'])
-    # def update_comment(comment_id):
-    #     return post_controller.update_comment_endpoint(comment_id)
+    @app.route('/comments/<int:comment_id>/update', methods=['POST'])
+    @token_required
+    def update_comment(comment_id, decoded_token):
+        return post_controller.update_comment_endpoint(comment_id, decoded_token)
 
-    # @app.route('/comments/<int:comment_id>', methods=['DELETE'])
-    # def delete_comment(comment_id):
-    #     return post_controller.delete_comment_endpoint(comment_id)
+    @app.route('/comments/<int:comment_id>/delete', methods=['POST'])
+    @token_required
+    def delete_comment(comment_id, decoded_token):
+        return post_controller.delete_comment_endpoint(comment_id, decoded_token)
 
     return app 
 
