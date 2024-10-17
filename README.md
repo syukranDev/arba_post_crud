@@ -3,6 +3,7 @@
 A CRUD application for managing posts and comments
 
 Live can be seen here if you wish to skip the hassle setup below: https://arba-post-crud.onrender.com/
+Note: Let me know if the link is down & I will restart server, this is due server provider will slow down the server due to inactivity.
 
 
 ## Installation
@@ -19,17 +20,42 @@ Live can be seen here if you wish to skip the hassle setup below: https://arba-p
    ```
 
 3. Set up the local database (PostgreSQL) (optional as you can just use my live database):
-   - Create a database, run migrations, and add initial data if needed. 
+   - Create a database, (optional: run migrations), and add initial data if needed. 
+   ```
+   CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(80) UNIQUE NOT NULL,
+    password_hash VARCHAR(120) NOT NULL
+   );
+   
+   CREATE TABLE posts (
+       id SERIAL PRIMARY KEY,
+       user_id VARCHAR(80) NOT NULL,
+       title VARCHAR(255) NOT NULL,
+       content TEXT NOT NULL,
+       CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (username)
+   );
+   
+   CREATE TABLE comments (
+       id SERIAL PRIMARY KEY,
+       post_id INTEGER NOT NULL,
+       user_id VARCHAR(80) NOT NULL,
+       content TEXT NOT NULL,
+       CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts (id),
+       CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES users (username)
+   );
+   ```
+   
    
 ## Usage
 
 - Run the application:
   ```bash
   python app.py
-  -- or run below
-  flask --app app.py --debug run
+  -- or run below, ensure you have Flask installed globally
+  flask run --host=0.0.0.0 --port=9000
   ```
-- Access the application at `http://localhost:5000`.
+- Access the application at `http://localhost:9000`.
 
 ## Database Structure
 
@@ -43,6 +69,7 @@ The project uses a PostgreSQL database. The main tables are:
 ## Features
 
 - User registration and authentication
+- Protected API routes
 - CRUD operations for posts and comments
 - Dynamic relationships between users, posts, and comments
 
