@@ -5,6 +5,9 @@ A CRUD application for managing posts and comments
 Live can be seen here if you wish to skip the hassle setup below: https://arba-post-crud.onrender.com/ <br>
 Note: Let me know if the link is down & I will restart server, this is due server provider will slow down the server due to inactivity.
 
+## Tech Stack: 
+Backend: Python, Flask, PostqreSQL, SQLAlchemy ORM <br>
+Frontend: HTML5, Bootstrap, jQuery, CSS, ES6 Javascript
 
 ## Installation
 
@@ -19,8 +22,9 @@ Note: Let me know if the link is down & I will restart server, this is due serve
    pip install -r requirements.txt
    ```
 
-3. Set up the local database (PostgreSQL) (optional as you can just use my live database):
-   - Create a database, (optional: run migrations), and add initial data if needed. 
+3. Set up the local database (PostgreSQL):
+   - Create a database and add initial data if needed, or (optional) run migrations.
+
    ```
    CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -44,6 +48,11 @@ Note: Let me know if the link is down & I will restart server, this is due serve
        CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts (id),
        CONSTRAINT fk_comment_user FOREIGN KEY (user_id) REFERENCES users (username)
    );
+   ```
+3. Set up `.env` file
+   ```
+   SECRETKEY_JWT=<REPLACE_ANY_RANDOM_VALUE_HERE>
+   SQLALCHEMY_DATABASE_URI=<REPLACE_POSTGRESQL_URL_HERE>
    ```
    
    
