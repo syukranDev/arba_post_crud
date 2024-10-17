@@ -10,7 +10,7 @@ Note: Let me know if the link is down & I will restart server, this is due serve
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/your-repository-name.git](https://github.com/syukranDev/arba_post_crud)
+   git clone https://github.com/syukranDev/arba_post_crud.git
    cd arba_post_crude
    ```
 
