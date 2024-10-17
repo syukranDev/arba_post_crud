@@ -57,7 +57,7 @@ def create_app():
     app.route('/api/register', methods=['POST'])(auth_controller.register)
 
     # Post Routes
-    @app.route('/api/posts/list', methods=['GET'])
+    @app.route('/api/posts/list', methods=['GET']) # show all posts regardless which user
     @token_required
     def list_post(decoded_token):
         return post_controller.list_post_endpoint(decoded_token)

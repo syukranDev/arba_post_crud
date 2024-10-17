@@ -4,7 +4,8 @@ from app import db
 from flask import jsonify
 
 def find_all_post(user_id):
-    posts = Post.query.filter_by(user_id=user_id).all()
+    # posts = Post.query.filter_by(user_id=user_id).all()
+    posts = Post.query.all()
     return [post.to_dict() for post in posts]
 
 def create_post(user_id, title, content):

@@ -29,7 +29,7 @@ def register():
         token = generate_token(username)
         return jsonify({'token': token, 'user_id' : username, 'message': 'User registered successfully'}), 200
     
-    return jsonify({'message': 'User registration failed'}), 500
+    return jsonify({'message': 'User registration already exist'}), 401
 
 def protected():
     auth_header  = request.headers.get('Authorization')

@@ -68,6 +68,8 @@ $(document).ready(function() {
 
     function loadPosts() {
         const token = sessionStorage.getItem('token'); 
+        const user_id = sessionStorage.getItem('user_id'); 
+
         $.ajax({
             url: '/api/posts/list',
             method: 'GET',
@@ -82,11 +84,16 @@ $(document).ready(function() {
                     $showCommentsButton.on('click', () => {
                         window.location.href = `/posts/${post.id}/comments`;
                     });
-                    const $editButton = $('<button style="margin-left:10px">Edit</button>');
-                    $editButton.on('click', () => editPost(post.id));
-                    const $deleteButton = $('<button style="margin-left:5px">Delete</button>');
-                    $deleteButton.on('click', () => deletePost(post.id));
-                    $li.append($showCommentsButton).append($editButton).append($deleteButton);
+
+                    if (user_id == post.user_id)
+                    {
+                        const $editButton = $('<button style="margin-left:10px">Edit</button>');
+                        $editButton.on('click', () => editPost(post.id));
+                        const $deleteButton = $('<button style="margin-left:5px">Delete</button>');
+                        $deleteButton.on('click', () => deletePost(post.id));
+                        $li.append($editButton).append($deleteButton);
+                    }
+                    $li.append($showCommentsButton)
                     $postList.append($li);
                 });
             },
@@ -172,6 +179,7 @@ $(document).ready(function() {
 
     function loadComments(postId) {
         const token = sessionStorage.getItem('token'); 
+        const user_id = sessionStorage.getItem('user_id'); 
 
         $.ajax({
             url: `/api/posts/${postId}/comments/list`,
@@ -185,11 +193,13 @@ $(document).ready(function() {
                 if (comments.length > 0) {
                     comments.forEach(comment => {
                         const $li = $(`<li style="margin-top:5px">${comment.content} - (by: ${comment.user_id})</li>`); // Adjust based on your comment object
-                        const $editButton = $('<button style="margin-left:10px">Edit</button>');
-                        $editButton.on('click', () => editComment(comment.id));
-                        const $deleteButton = $('<button style="margin-left:10px">Delete</button>');
-                        $deleteButton.on('click', () => deleteComment(comment.id));
-                        $li.append($editButton).append($deleteButton);
+                        if (user_id == comment.user_id) {
+                            const $editButton = $('<button style="margin-left:10px">Edit</button>');
+                            $editButton.on('click', () => editComment(comment.id));
+                            const $deleteButton = $('<button style="margin-left:10px">Delete</button>');
+                            $deleteButton.on('click', () => deleteComment(comment.id));
+                            $li.append($editButton).append($deleteButton);
+                        }
                         $commentList.append($li);
                     });
                 }
