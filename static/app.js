@@ -79,21 +79,28 @@ $(document).ready(function() {
             success: function(posts) {
                 $postList.empty(); 
                 posts.forEach(post => {
-                    const $li = $(`<li style="margin-top:10px">ID: ${post.id} <br>Title: ${post.title} <br> Content: ${post.content} <br> Posted By: ${post.user_id}</li>`);
-                    const $showCommentsButton = $('<button style="margin-left:10px">Show Comments</button>');
+                    const $li = $(`
+                        <li class="list-group-item mt-2">
+                            <strong>ID:</strong> ${post.id} <br>
+                            <strong>Title:</strong> ${post.title} <br> 
+                            <strong>Content:</strong> ${post.content} <br> 
+                            <strong>Posted By:</strong> ${post.user_id}
+                                <button class="btn btn-info btn-sm" style="margin-left:10px">Show Comments</button>
+                        </li>
+                    `);
+    
+                    const $showCommentsButton = $li.find('button.btn-info');
                     $showCommentsButton.on('click', () => {
                         window.location.href = `/posts/${post.id}/comments`;
                     });
-
-                    if (user_id == post.user_id)
-                    {
-                        const $editButton = $('<button style="margin-left:10px">Edit</button>');
+    
+                    if (user_id == post.user_id) {
+                        const $editButton = $('<button class="btn btn-warning btn-sm" style="margin-left:10px">Edit</button>');
                         $editButton.on('click', () => editPost(post.id));
-                        const $deleteButton = $('<button style="margin-left:5px">Delete</button>');
+                        const $deleteButton = $('<button class="btn btn-danger btn-sm" style="margin-left:5px">Delete</button>');
                         $deleteButton.on('click', () => deletePost(post.id));
                         $li.append($editButton).append($deleteButton);
                     }
-                    $li.append($showCommentsButton)
                     $postList.append($li);
                 });
             },
@@ -192,14 +199,27 @@ $(document).ready(function() {
                 console.log(comments)
                 if (comments.length > 0) {
                     comments.forEach(comment => {
-                        const $li = $(`<li style="margin-top:5px">${comment.content} - (by: ${comment.user_id})</li>`); // Adjust based on your comment object
-                        if (user_id == comment.user_id) {
-                            const $editButton = $('<button style="margin-left:10px">Edit</button>');
-                            $editButton.on('click', () => editComment(comment.id));
-                            const $deleteButton = $('<button style="margin-left:10px">Delete</button>');
-                            $deleteButton.on('click', () => deleteComment(comment.id));
-                            $li.append($editButton).append($deleteButton);
+                        const $li = $(`
+                            <li class="list-group-item mt-2">
+                                ${comment.content} - (by: ${comment.user_id})
+                                <div class="mt-2">
+                                    <button class="btn btn-warning btn-sm" style="margin-left:10px">Edit</button>
+                                    <button class="btn btn-danger btn-sm" style="margin-left:5px">Delete</button>
+                                </div>
+                            </li>
+                        `);
+    
+                        const $editButton = $li.find('button.btn-warning');
+                        $editButton.on('click', () => editComment(comment.id));
+    
+                        const $deleteButton = $li.find('button.btn-danger');
+                        $deleteButton.on('click', () => deleteComment(comment.id));
+    
+                        if (user_id != comment.user_id) {
+                            $editButton.hide();
+                            $deleteButton.hide();
                         }
+    
                         $commentList.append($li);
                     });
                 }
