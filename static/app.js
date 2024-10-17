@@ -16,6 +16,8 @@ $(document).ready(function() {
             const username = $("#username").val();
             const password = $("#password").val();
 
+            $('#loadingModal').modal('show');
+
             $.ajax({
                 url: '/api/login',
                 method: 'POST',
@@ -31,6 +33,9 @@ $(document).ready(function() {
                 },
                 error: function(jqXHR) {
                     $("#errorMessage").text(jqXHR.responseJSON.message);
+                },
+                complete: function() {
+                    $('#loadingModal').modal('hide');
                 }
             });
         });
@@ -42,6 +47,8 @@ $(document).ready(function() {
             const username = $("#username").val();
             const password = $("#password").val();
 
+            $('#loadingModal').modal('show');
+
             $.ajax({
                 url: '/api/register',
                 method: 'POST',
@@ -52,6 +59,9 @@ $(document).ready(function() {
                 },
                 error: function(jqXHR) {
                     $("#errorMessage").text(jqXHR.responseJSON.message);
+                },
+                complete: function() {
+                    $('#loadingModal').modal('hide');
                 }
             });
         });
@@ -69,6 +79,8 @@ $(document).ready(function() {
     function loadPosts() {
         const token = sessionStorage.getItem('token'); 
         const user_id = sessionStorage.getItem('user_id'); 
+
+        $('#loadingModal2').modal('show');
 
         $.ajax({
             url: '/api/posts/list',
@@ -107,6 +119,9 @@ $(document).ready(function() {
             error: function(err) {
                 console.log(err)
                 alert(err.responseJSON.message);
+            },
+            complete: function() {
+                $('#loadingModal2').modal('hide');
             }
         });
     }
@@ -188,6 +203,7 @@ $(document).ready(function() {
         const token = sessionStorage.getItem('token'); 
         const user_id = sessionStorage.getItem('user_id'); 
 
+        $('#loadingModal3').modal('show');
         $.ajax({
             url: `/api/posts/${postId}/comments/list`,
             method: 'GET',
@@ -223,6 +239,9 @@ $(document).ready(function() {
                         $commentList.append($li);
                     });
                 }
+            },
+            complete: function() {
+                $('#loadingModal3').modal('hide');
             }
         });
     }
