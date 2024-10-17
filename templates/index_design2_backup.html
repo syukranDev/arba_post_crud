@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Home Test - Syukran Soleh</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <script src="tailwind.js"></script> -->
+</head>
+<body class="font-mono mx-4">
+    
+    <h1 class="text-7xl flex justify-center m-5 font-extrabold">CRUD POST-COMMENT (by: @syukranDev)</h1>
+
+    <div class="px-8 py-8">
+        <div class="grid gap-1 items-start justify-center">
+          <div class="relative group">
+            <div class="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+            <button class="relative px-7 py-4 bg-black rounded-lg leading-none flex items-center divide-x divide-gray-600">
+              <span class="flex items-center space-x-5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-600 -rotate-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+                <span class="pr-6 text-gray-100">Updated as of 17 Oct 2024</span>
+              </span>
+              <span class="pl-6 text-indigo-400 group-hover:text-gray-100 transition duration-200">See what's new &rarr;</span>
+            </button>
+          </div>
+        </div>
+    </div>
+    
+    <div class="container flex justify-center mx-auto px-4 g-white dark:bg-slate-900 rounded-lg px-6 py-8 ring-1 ring-slate-900/5 shadow-xl">
+        <form id="login-form">
+            <input class=" rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" type="text" id="username-input" placeholder="Enter your name" required>
+            <input class="mt-2  rounded-md border-0 py-1.5 pl-7 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" type="password" id="password-input" placeholder="Enter your password" required>
+            <button class="rounded-md border-0 py.1.5 text-red-400 hover:text-white font-bold" type="submit">Login</button>
+        </form>
+
+
+    </div>
+
+
+
+    <script>
+        $(document).ready(function() {
+            const baseUrl = "http://" + "{{ base_url }}";
+            console.log(baseUrl)
+
+            $('#login-form').on('submit', function(e) {
+                e.preventDefault(); 
+
+                let username = $('#username-input').val(); 
+                let password = $('#password-input').val(); 
+
+                $.ajax({
+                    type: 'POST',
+                    url: baseUrl + 'api/login',
+                    data: JSON.stringify({ username: username, password: password }), 
+                    contentType: 'application/json',
+                    success: function(response) {
+                        console.log(response)
+                        if (response.token) {
+                            localStorage.setItem('token', response.token);
+                            localStorage.setItem('userLoggedIn', response.user_id);
+
+                            alert('Login successful');
+                            window.location.href = baseUrl + 'dashboard'
+
+                        } else {
+                            alert('Login failed');
+                        }
+                    },
+                    error: function(xhr) {
+                        const errorResponse = JSON.parse(xhr.responseText);
+                        alert('Error: ' + errorResponse.message);
+                        console.log(errorResponse); 
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

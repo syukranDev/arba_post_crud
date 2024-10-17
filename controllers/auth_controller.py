@@ -26,7 +26,8 @@ def register():
     # with current_app.app_context():
     user = User.register_user(username, password)
     if user:
-        return jsonify({'message': 'User registered successfully'}), 201
+        token = generate_token(username)
+        return jsonify({'token': token, 'user_id' : username, 'message': 'User registered successfully'}), 200
     
     return jsonify({'message': 'User registration failed'}), 500
 

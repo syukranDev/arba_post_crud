@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+    <h1>Posts (Logged In User: <span id="user_id"></span>)</h1>
+    <button onclick="logout_clear()">Logout</button>
+    <button id="createPostButton">Create Post</button>
+
+    <ul id="postList"></ul>
+    <div id="errorMessage"></div>
+</body>
+<script>
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login';
+    }
+
+    const user_id = sessionStorage.getItem('user_id'); 
+    $('#user_id').text(user_id)
+
+    function logout_clear() { 
+        sessionStorage.clear();
+        localStorage.clear();
+
+        window.location.href = '/login';
+    }
+</script>
+</html>

@@ -20,7 +20,7 @@ def create_app():
 
     app.config['SECRETKEY_JWT'] = os.getenv('SECRETKEY_JWT')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Optional
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  
 
     db.init_app(app) 
     migrate.init_app(app, db) 
@@ -35,7 +35,7 @@ def create_app():
     with app.app_context():
         check_db_connection()
 
-    #  DEVNOTE: Import models then controller globally to avoid circular imports
+    #  Import models then controller globally to avoid circular imports - refactor later
     from models.user_model import User
     from models.post_model import Post
     from models.comment_model import Comment
@@ -50,67 +50,71 @@ def create_app():
 
     @app.errorhandler(404)
     def page_not_found(e):
-        return redirect(url_for('home'))  # Replace 'home' with the name of your desired route
+        return redirect(url_for('home')) 
 
-    # Login & Register login goes here
+    # Login & Register Routes
     app.route('/api/login', methods=['POST'])(auth_controller.login)
     app.route('/api/register', methods=['POST'])(auth_controller.register)
 
     # Post Routes
-    @app.route('/posts/create', methods=['POST'])
+    @app.route('/api/posts/list', methods=['GET'])
+    @token_required
+    def list_post(decoded_token):
+        return post_controller.list_post_endpoint(decoded_token)
+
+    @app.route('/api/posts/create', methods=['POST'])
     @token_required
     def create_post(decoded_token):
         return post_controller.create_post_endpoint(decoded_token)
 
-    @app.route('/posts/update/<int:post_id>', methods=['POST'])
+    @app.route('/api/posts/update/<int:post_id>', methods=['POST'])
     @token_required
     def update_post(post_id, decoded_token):
         return post_controller.update_post_endpoint(post_id, decoded_token)
 
-    @app.route('/posts/delete/<int:post_id>', methods=['GET'])
+    @app.route('/api/posts/delete/<int:post_id>', methods=['GET'])
     @token_required
     def delete_post(post_id, decoded_token):
         return post_controller.delete_post_endpoint(post_id, decoded_token)
 
     # Comment Routes
-    @app.route('/posts/<int:post_id>/comments/create', methods=['POST'])
+    @app.route('/api/posts/<int:post_id>/comments/list', methods=['GET'])
     @token_required
-    def create_comment(post_id, decoded_token): # we need post id so the comment creted will associated to the post id
+    def list_comment(post_id, decoded_token):
+        return post_controller.list_comment_endpoint(post_id, decoded_token)
+
+    @app.route('/api/posts/<int:post_id>/comments/create', methods=['POST'])
+    @token_required
+    def create_comment(post_id, decoded_token):
         return post_controller.create_comment_endpoint(post_id, decoded_token)
 
-    @app.route('/comments/<int:comment_id>/update', methods=['POST'])
+    @app.route('/api/comments/<int:comment_id>/update', methods=['POST'])
     @token_required
     def update_comment(comment_id, decoded_token):
         return post_controller.update_comment_endpoint(comment_id, decoded_token)
 
-    @app.route('/comments/<int:comment_id>/delete', methods=['POST'])
+    @app.route('/api/comments/<int:comment_id>/delete', methods=['POST'])
     @token_required
     def delete_comment(comment_id, decoded_token):
         return post_controller.delete_comment_endpoint(comment_id, decoded_token)
 
-    # UI declaration goes here
+    # UI declaration goes belo here
     @app.route('/')
     def home():
-        return render_template('index.html', base_url='localhost:5000/')
+        return render_template('index.html')
 
-    @app.route('/dashboard')
-    def dashboard():
-        postArray = [
-            {"id": 2, "user_id": "bossku", "title": "Ini posting pertama saya", "content": "mantap bossku"},
-            {"id": 3, "user_id": "bossku", "title": "Ini posting pertama saya", "content": "mantap bossku"},
-            {"id": 4, "user_id": "bossku", "title": "jom mAKAN NASI AYAM", "content": "HORAYYY JOM"},
-            {"id": 5, "user_id": "bossku", "title": "jhgjhgjhgjh", "content": "HORAYYY JOM"},
-            {"id": 6, "user_id": "bossku", "title": "good morning", "content": "makan breakfast then tido"},
-            {"id": 7, "user_id": "bossku", "title": "good afternoon", "content": "makan dinner then tido"}
-        ]
-        return render_template('dashboard.html',base_url='localhost:5000/', data=postArray, total_post=len(postArray))
-    
-    @app.route('/posts/o/<int:post_id>')
-    def post_read():
-        postArray =  {"id": 2, "user_id": "bossku", "title": "Ini posting pertama saya", "content": "mantap bossku"},
-        
-        return render_template('post_read.html',base_url='localhost:5000/', data=postArray, total_post=len(postArray))
+    # Posts page
+    @app.route('/posts')
+    # @token_required
+    def posts_home():
+        return render_template('posts.html')
 
+    # Comments page for a specific post
+    @app.route('/posts/<int:post_id>/comments')
+    # @token_required
+    def comments_home(post_id):
+        return render_template('comments.html', post_id=post_id)
+   
     return app 
 
 if __name__ == '__main__':
