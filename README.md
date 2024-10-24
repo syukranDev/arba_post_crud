@@ -9,6 +9,10 @@ Note: Let me know if the link is down & I will restart server, this is due serve
 Backend: Python, Flask, PostqreSQL, SQLAlchemy ORM <br>
 Frontend: HTML5, Bootstrap, jQuery, CSS, ES6 Javascript
 
+*Hosted on Platform as a Service (PaSS): <br>*
+Databse: <a href="https://supabase.com/">Supabase</a> <br>
+Server: <a href="https://render.com/">Render</a>
+
 ## Installation
 
 1. Clone the repository:
