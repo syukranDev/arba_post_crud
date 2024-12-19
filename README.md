@@ -2,9 +2,6 @@
 
 A CRUD application for managing posts and comments
 
-Live can be seen here if you wish to skip the hassle setup below: https://arba-post-crud.onrender.com/ <br>
-(let me know if unable to register or login, db might be down to preserve cost) 
-
 ## Tech Stack: 
 Backend: Python, Flask, PostqreSQL, SQLAlchemy ORM <br>
 Frontend: HTML5, Bootstrap, jQuery, CSS, ES6 Javascript
