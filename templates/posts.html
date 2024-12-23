@@ -38,6 +38,11 @@
     </div>
     
     <script>
+       $('#loadingModal2').modal({
+            backdrop: 'static',
+            keyboard: false
+        });
+
         const token = sessionStorage.getItem('token');
         if (!token) {
             window.location.href = '/login';
@@ -51,6 +56,17 @@
             localStorage.clear();
             window.location.href = '/login';
         }
+
+        $(window).on('load', function() {
+            $('#loadingModal2').modal('hide');
+            $('.modal-backdrop').remove();
+        });
+
+        //fallback
+        setTimeout(function() {
+            $('#loadingModal2').modal('hide');
+            $('.modal-backdrop').remove();
+        }, 5000);
     </script>
     
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
