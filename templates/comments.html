@@ -37,11 +37,6 @@
     </div>
     
     <script>
-        $('#loadingModal3').modal({
-            backdrop: 'static',
-            keyboard: false
-        });
-
         const token = sessionStorage.getItem('token');
         if (!token) {
             window.location.href = '/login';
